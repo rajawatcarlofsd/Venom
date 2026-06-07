@@ -3,61 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Venom - Telegram Management Tool</title>
+    <title>Venom - Multi-Account Telegram Manager</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <div class="navbar">
+        <h1>🐍 Venom</h1>
+        <p>Multi-Account Telegram Manager</p>
+    </div>
+
     <div class="container">
-        <div class="header">
-            <h1>🐍 Venom</h1>
-            <p>Telegram Account Management Tool</p>
+        <!-- TAB NAVIGATION -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('accounts')">📱 Accounts</button>
+            <button class="tab-btn" onclick="switchTab('messaging')">💬 Messaging</button>
+            <button class="tab-btn" onclick="switchTab('scheduled')">⏰ Scheduled Tasks</button>
+            <button class="tab-btn" onclick="switchTab('settings')">⚙️ Settings</button>
         </div>
 
-        <div class="setup-section">
-            <h2>Account Setup</h2>
-            <form id="setupForm">
-                <div class="form-group">
-                    <label for="api_id">API ID *</label>
-                    <input type="number" id="api_id" name="api_id" placeholder="Enter your Telegram API ID" required>
-                    <small>Get it from https://my.telegram.org/apps</small>
-                </div>
+        <!-- ============ ACCOUNTS TAB ============ -->
+        <div id="accounts" class="tab-content active">
+            <div class="section-header">
+                <h2>Manage Telegram Accounts</h2>
+                <p>Add, manage, and monitor multiple Telegram accounts</p>
+            </div>
 
-                <div class="form-group">
-                    <label for="api_hash">API Hash *</label>
-                    <input type="text" id="api_hash" name="api_hash" placeholder="Enter your Telegram API Hash" required>
-                    <small>Get it from https://my.telegram.org/apps</small>
-                </div>
+            <!-- Add New Account -->
+            <div class="card">
+                <h3>➕ Add New Account</h3>
+                <form id="addAccountForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>API ID *</label>
+                            <input type="number" id="new_api_id" placeholder="Get from https://my.telegram.org/apps" required>
+                        </div>
+                        <div class="form-group">
+                            <label>API Hash *</label>
+                            <input type="text" id="new_api_hash" placeholder="Get from https://my.telegram.org/apps" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Phone Number *</label>
+                            <input type="tel" id="new_phone" placeholder="+1234567890" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Account Nickname *</label>
+                            <input type="text" id="new_nickname" placeholder="e.g., Main Account" required>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">✅ Add Account</button>
+                    </div>
+                </form>
+            </div>
 
-                <div class="form-group">
-                    <label for="phone">Phone Number *</label>
-                    <input type="tel" id="phone" name="phone" placeholder="+1234567890" required>
-                    <small>Include country code with + sign</small>
+            <!-- Accounts List -->
+            <div class="card">
+                <h3>📋 Your Accounts</h3>
+                <div id="accountsList" class="accounts-grid">
+                    <p class="loading">Loading accounts...</p>
                 </div>
+            </div>
+        </div>
 
-                <div class="form-group">
-                    <label for="nickname">Nickname *</label>
-                    <input type="text" id="nickname" name="nickname" placeholder="Enter account nickname" required>
-                    <small>For internal identification</small>
+        <!-- ============ MESSAGING TAB ============ -->
+        <div id="messaging" class="tab-content">
+            <div class="section-header">
+                <h2>Send Messages to Groups</h2>
+                <p>Broadcast messages across multiple groups with optional delays</p>
+            </div>
+
+            <div class="card">
+                <h3>📤 Send Message Now</h3>
+                <form id="sendMessageForm">
+                    <div class="form-group">
+                        <label>Select Account *</label>
+                        <select id="msg_account_id" required onchange="loadGroupsForMessaging()">
+                            <option value="">-- Select Account --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Groups/Channels *</label>
+                        <div id="groupsList" class="groups-checkbox-container">
+                            <p class="loading">Select an account first</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Message Text *</label>
+                        <textarea id="msg_text" placeholder="Enter your message here..." required rows="5"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Delay Between Messages (seconds)</label>
+                        <input type="number" id="msg_delay" value="0" min="0" step="0.1">
+                        <small>Add delay between sending to each group</small>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">📨 Send Now</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ============ SCHEDULED TASKS TAB ============ -->
+        <div id="scheduled" class="tab-content">
+            <div class="section-header">
+                <h2>Schedule Messages</h2>
+                <p>Set up automatic message broadcasting with repetition</p>
+            </div>
+
+            <div class="card">
+                <h3>⏰ Schedule New Message</h3>
+                <form id="scheduleMessageForm">
+                    <div class="form-group">
+                        <label>Select Account *</label>
+                        <select id="sched_account_id" required onchange="loadGroupsForScheduling()">
+                            <option value="">-- Select Account --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Groups/Channels *</label>
+                        <div id="schedGroupsList" class="groups-checkbox-container">
+                            <p class="loading">Select an account first</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Message Text *</label>
+                        <textarea id="sched_text" placeholder="Enter your message here..." required rows="5"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Repeat Count *</label>
+                            <input type="number" id="sched_repeat" value="2" min="1" required>
+                            <small>Number of times to repeat</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Interval (seconds) *</label>
+                            <input type="number" id="sched_interval" value="3600" min="60" required>
+                            <small>Wait time between repetitions</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Delay Between Messages (seconds)</label>
+                        <input type="number" id="sched_delay" value="0" min="0" step="0.1">
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">⏲️ Schedule Message</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Active Scheduled Tasks -->
+            <div class="card">
+                <h3>📅 Active Scheduled Tasks</h3>
+                <div id="scheduledTasksList" class="tasks-list">
+                    <p class="loading">Loading tasks...</p>
                 </div>
+            </div>
+        </div>
 
+        <!-- ============ SETTINGS TAB ============ -->
+        <div id="settings" class="tab-content">
+            <div class="section-header">
+                <h2>Settings & Configuration</h2>
+                <p>Export and manage your configuration</p>
+            </div>
+
+            <div class="card">
+                <h3>💾 Save All Configuration</h3>
+                <p>Click the button below to save all your current settings:</p>
                 <div class="button-group">
-                    <button type="submit" class="btn btn-primary">💾 Save All</button>
-                    <button type="button" class="btn btn-secondary" onclick="testConnection()">🔗 Test Connection</button>
-                    <button type="button" class="btn btn-danger" onclick="clearSession()">🗑️ Clear All</button>
+                    <button onclick="saveAllConfig()" class="btn btn-primary">💾 Save All</button>
                 </div>
-            </form>
-        </div>
+            </div>
 
-        <div class="status-section" id="statusSection" style="display: none;">
-            <h3>Status</h3>
-            <div id="statusMessage" class="status-message"></div>
-        </div>
+            <div class="card">
+                <h3>📥 Export Configuration</h3>
+                <p>Download your configuration as JSON:</p>
+                <div class="button-group">
+                    <button onclick="exportConfig()" class="btn btn-secondary">📥 Export</button>
+                </div>
+            </div>
 
-        <div class="saved-data-section" id="savedDataSection" style="display: none;">
-            <h3>📊 Saved Configuration</h3>
-            <div id="savedDataContent" class="data-display"></div>
+            <div class="card">
+                <h3>📊 System Status</h3>
+                <div id="systemStatus" class="status-display">
+                    <p class="loading">Loading status...</p>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Status Messages -->
+    <div id="statusMessage" class="status-message" style="display: none;"></div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
