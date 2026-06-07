@@ -208,7 +208,6 @@ body {
     color: #00d4ff;
 }
 
-/* TABS */
 .tabs {
     display: flex;
     gap: 10px;
@@ -248,7 +247,6 @@ body {
     display: block;
 }
 
-/* ACCOUNTS GRID */
 .accounts-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -309,7 +307,6 @@ body {
     font-style: italic;
 }
 
-/* GROUPS */
 .groups-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -360,7 +357,6 @@ body {
     padding: 20px;
 }
 
-/* STATUS MESSAGE */
 .status-message {
     position: fixed;
     bottom: 30px;
@@ -397,7 +393,6 @@ body {
     to { transform: translateY(0); opacity: 1; }
 }
 
-/* RESPONSIVE */
 @media (max-width: 768px) {
     .navbar h1 {
         font-size: 1.8em;

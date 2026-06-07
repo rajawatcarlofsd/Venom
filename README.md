@@ -24,7 +24,7 @@ A production-ready web application for managing multiple Telegram accounts with 
 
 ### 1. Clone Repository
 ```bash
-git clone <repo-url>
+git clone https://github.com/rajawatcarlofsd/Venom.git
 cd Venom
 ```
 
@@ -101,7 +101,7 @@ Venom/
     └── script.js         # Frontend logic
 ```
 
-## 🔐 Security
+## 🔒 Security
 
 - API credentials stored in `.env` (never in code)
 - Telegram sessions encrypted by Telethon
@@ -119,6 +119,10 @@ Venom/
 - Change SECRET_KEY before deploying
 
 ## 🛠️ Troubleshooting
+
+### "ModuleNotFoundError: No module named 'flask_session'"
+- Run: `pip install -r requirements.txt`
+- Use: `pip install Flask==3.0.0 Telethon==1.34.0 python-dotenv==1.0.1`
 
 ### "OTP not received"
 - Check internet connection
@@ -143,7 +147,7 @@ Venom/
 
 MIT License - See LICENSE file
 
-## 👤 Support
+## 💬 Support
 
 For issues or questions, please open an issue on GitHub.
 

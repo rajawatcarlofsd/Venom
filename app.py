@@ -6,7 +6,6 @@ from datetime import datetime
 from pathlib import Path
 
 from flask import Flask, render_template, request, jsonify, session
-from flask_session import Session
 from dotenv import load_dotenv
 from telethon import TelegramClient
 from telethon.errors import (
@@ -24,15 +23,17 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key-CHANGE-IN-PRODUCTION')
-app.config['SESSION_TYPE'] = 'filesystem'
-app.config['PERMANENT_SESSION_LIFETIME'] = 86400 * 30
-Session(app)
+app.config['SESSION_COOKIE_SECURE'] = False
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 API_ID = int(os.getenv('TELEGRAM_API_ID', '0'))
 API_HASH = os.getenv('TELEGRAM_API_HASH', '')
 
 if not API_ID or not API_HASH:
-    raise ValueError('TELEGRAM_API_ID and TELEGRAM_API_HASH must be set in .env')
+    logger.warning('TELEGRAM_API_ID and TELEGRAM_API_HASH not set - using defaults')
+    API_ID = 123456
+    API_HASH = 'your_api_hash'
 
 CONFIG_FILE = 'venom_accounts.json'
 SESSIONS_DIR = Path('telegram_sessions')
