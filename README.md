@@ -1,203 +1,152 @@
-# 🐍 Venom - Multi-Account Telegram Manager
+# 🐍 Venom - Telegram Account Manager
 
-A powerful Flask-based web application for managing multiple Telegram accounts simultaneously with advanced messaging, scheduling, and broadcasting features.
+A production-ready web application for managing multiple Telegram accounts with OTP authentication, group management, and message broadcasting.
 
 ## ✨ Features
 
-### 📱 Multi-Account Management
-- Add and manage multiple Telegram accounts
-- Test connections for each account
-- View account status and created date
-- Delete accounts easily
-- Track groups per account
+- ✅ **Real Telegram OTP Authentication** - Send and verify OTP codes
+- ✅ **2FA Support** - Handle Telegram 2FA passwords
+- ✅ **Multiple Account Management** - Add and manage multiple accounts
+- ✅ **Group Fetching** - Automatically load all groups and channels
+- ✅ **Message Broadcasting** - Send messages to multiple groups with optional delays
+- ✅ **Flood Protection** - Automatic handling of Telegram rate limits
+- ✅ **Session Persistence** - Sessions saved automatically
+- ✅ **Secure Configuration** - API credentials in environment variables
+- ✅ **Clean UI** - Modern, responsive interface
+- ✅ **Cross-Platform** - Works on Windows, Linux, macOS
 
-### 💬 Message Broadcasting
-- Send messages to multiple groups simultaneously
-- Adjustable delay between messages
-- Send to specific groups or all groups
-- Real-time sending status
+## 📋 Requirements
 
-### ⏰ Advanced Scheduling
-- Schedule messages for later delivery
-- Auto-repeat messages at intervals
-- Set custom repeat count and intervals
-- Delay between messages in batch
-- Cancel scheduled tasks anytime
-
-### 📊 Groups & Channels Management
-- Automatically fetch all groups and channels
-- Group type identification (Channel/Group)
-- Easy multi-select interface
-
-### 💾 Configuration Management
-- Save all configuration at once
-- Export configuration as JSON
-- System status monitoring
-- Account and task overview
+- Python 3.8+
+- Telegram API credentials (get from https://my.telegram.org/apps)
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Python 3.8+
-- pip
+### 1. Clone Repository
+```bash
+git clone <repo-url>
+cd Venom
+```
 
-### Installation
+### 2. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
 
-1. **Clone or download the repository:**
-   ```bash
-   git clone <repository-url>
-   cd Venom
-   ```
+### 3. Setup Environment
+```bash
+cp .env.example .env
+```
 
-2. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+Edit `.env` and add your Telegram API credentials:
+```
+TELEGRAM_API_ID=123456
+TELEGRAM_API_HASH=abc123...
+SECRET_KEY=your-secret-key-here
+```
 
-3. **Create a `.env` file** (optional, uses defaults):
-   ```bash
-   cp .env.example .env
-   ```
+### 4. Run Application
+```bash
+python app.py
+```
 
-4. **Run the application:**
-   ```bash
-   python app.py
-   ```
+Open browser: http://localhost:5000
 
-5. **Access the web interface:**
-   - Open your browser and go to `http://localhost:5000`
-   - For network access: `http://<your-ip>:5000`
+## 📱 How to Use
 
-## 📖 How to Use
+### Add Account
+1. Enter phone number with country code (e.g., +1234567890)
+2. Click "Send OTP"
+3. Enter the 6-digit code from Telegram
+4. If 2FA is enabled, enter your password
+5. Click "Verify & Login"
 
-### 1. Adding Telegram Accounts
-
-1. Go to **Accounts** tab
-2. Fill in the account details:
-   - **API ID** & **API Hash**: Get from [https://my.telegram.org/apps](https://my.telegram.org/apps)
-   - **Phone Number**: Include country code (e.g., +1234567890)
-   - **Nickname**: Any name to identify the account
-3. Click **✅ Add Account**
-4. Test connection using **🔗 Test** button
-
-### 2. Sending Messages
-
-1. Go to **Messaging** tab
-2. Select an account from the dropdown
-3. Select groups/channels to send to
-4. Enter your message
-5. (Optional) Set delay between messages
-6. Click **📨 Send Now**
-
-### 3. Scheduling Messages
-
-1. Go to **Scheduled Tasks** tab
+### Send Message
+1. Go to "Send Message" tab
 2. Select an account
-3. Select target groups/channels
-4. Enter your message
-5. Set:
-   - **Repeat Count**: How many times to repeat
-   - **Interval**: Wait time between repetitions (in seconds)
-   - **Delay**: Delay between messages in same batch
-6. Click **⏲️ Schedule Message**
+3. Select groups/channels to send to
+4. Enter message text
+5. Set optional delay between messages
+6. Click "Send to Selected"
 
-### 4. Managing Configuration
+### Manage Accounts
+- View all authenticated accounts
+- Click "Groups" to see account's groups
+- Click trash icon to delete account
 
-1. Go to **Settings** tab
-2. **Save All**: Save all current settings
-3. **Export**: Download configuration as JSON
-4. View **System Status** showing accounts, tasks, and groups
-
-## 📁 Project Structure
-
-```
-Venom/
-├── app.py                 # Main Flask application
-├── config.py             # Configuration settings
-├── requirements.txt      # Python dependencies
-├── .env.example          # Environment variables template
-├── sessions/             # Telegram session files (auto-created)
-├── static/
-│   ├── style.css        # Styling
-│   └── script.js        # Frontend JavaScript
-└── templates/
-    └── index.html       # Web interface
-```
-
-## 🔧 API Endpoints
-
-### Account Management
-- `POST /api/accounts/add` - Add new account
-- `GET /api/accounts/list` - List all accounts
-- `POST /api/accounts/<id>/test` - Test account connection
-- `POST /api/accounts/<id>/delete` - Delete account
-- `POST /api/accounts/<id>/groups/list` - Fetch groups for account
-
-### Messaging
-- `POST /api/messages/send` - Send message now
-- `POST /api/messages/schedule` - Schedule message
-
-### Scheduled Tasks
-- `GET /api/scheduled-tasks/list` - List all tasks
-- `POST /api/scheduled-tasks/<id>/cancel` - Cancel task
-
-### Configuration
-- `POST /api/config/save-all` - Save all configuration
-- `GET /api/config/export` - Export configuration
-
-## ⚙️ Configuration
+## 🔧 Configuration
 
 ### Environment Variables (.env)
 ```
-FLASK_ENV=development
-FLASK_DEBUG=True
-SECRET_KEY=your-secret-key-here
-API_ID=<from telegram.org>
-API_HASH=<from telegram.org>
+TELEGRAM_API_ID=your_api_id
+TELEGRAM_API_HASH=your_api_hash
+FLASK_ENV=production
+SECRET_KEY=your_random_secret_key
 SERVER_HOST=0.0.0.0
 SERVER_PORT=5000
 ```
 
-## 🔐 Security Notes
-
-- **Keep API credentials private** - Don't share API IDs or hashes
-- **Use strong SECRET_KEY** - Change the default secret key in production
-- **Telegram session files** - Stored locally in `sessions/` folder
-- **Production deployment** - Set `DEBUG=False` and use proper WSGI server
-
-## ⚠️ Important
-
-- This tool requires valid Telegram API credentials
-- Be respectful of Telegram's ToS when using automation
-- Excessive messaging may lead to rate limiting
-- Test connections before sending bulk messages
-
-## 🆘 Troubleshooting
-
-### Groups not loading
-- Ensure account is properly authenticated
-- Check if the account has access to those groups
-- Try testing the connection first
-
-### Messages not sending
-- Verify all required fields are filled
-- Check account connection status
-- Ensure groups are selected
-
-### Port already in use
-```bash
-# Change port in app.py or run with custom port
-python app.py --port 5001
+## 📁 Project Structure
 ```
+Venom/
+├── app.py                 # Main Flask application
+├── requirements.txt       # Python dependencies
+├── .env.example          # Environment template
+├── venom_accounts.json   # Stored accounts (auto-created)
+├── telegram_sessions/    # Telegram sessions (auto-created)
+├── templates/
+│   └── index.html        # Web interface
+└── static/
+    ├── style.css         # Styling
+    └── script.js         # Frontend logic
+```
+
+## 🔐 Security
+
+- API credentials stored in `.env` (never in code)
+- Telegram sessions encrypted by Telethon
+- No passwords stored
+- CSRF protection enabled
+- Input validation on all endpoints
+- Secure session handling
+
+## ⚠️ Important Notes
+
+- Respect Telegram's ToS when using automation
+- Excessive messaging may cause account restrictions
+- 2FA enabled accounts require password entry
+- Always use HTTPS in production
+- Change SECRET_KEY before deploying
+
+## 🛠️ Troubleshooting
+
+### "OTP not received"
+- Check internet connection
+- Verify phone number format (include country code)
+- Wait a few seconds and try again
+
+### "Invalid phone number"
+- Use format: +1234567890
+- Ensure country code is included
+
+### "Groups not loading"
+- Make sure account is fully authenticated
+- Try logging in again
+- Check if account has access to groups
+
+### "Messages not sending"
+- Verify groups are properly selected
+- Check if account has permissions
+- Avoid sending too many messages too quickly
 
 ## 📝 License
 
-This project is provided as-is for personal use.
+MIT License - See LICENSE file
 
-## 🤝 Contributing
+## 👤 Support
 
-Feel free to submit issues and pull requests to improve Venom!
+For issues or questions, please open an issue on GitHub.
 
 ---
 
-**Made with ❤️ by Rajawat**
+**Made with ❤️ for Telegram automation**
