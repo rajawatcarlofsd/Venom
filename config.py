@@ -8,6 +8,8 @@ class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
     DEBUG = False
     TESTING = False
+    SERVER_HOST = os.getenv('SERVER_HOST', '0.0.0.0')
+    SERVER_PORT = int(os.getenv('SERVER_PORT', 5000))
 
 class DevelopmentConfig(Config):
     """Development configuration"""
